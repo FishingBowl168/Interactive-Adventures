@@ -3,6 +3,10 @@ from fastapi.middleware.cors import CORSMiddleware
 from Core.config import settings
 from routers import story, job
 
+from db.database import create_tables
+
+create_tables()
+
 app = FastAPI(
     title="Interactive Story API",
     description="API for generating and managing interactive stories",
@@ -13,7 +17,7 @@ app = FastAPI(
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=settings.ALLOWED_ORIGINS,
+    allow_origins=[origin.strip() for origin in settings.ALLOWED_ORIGINS.split(",")] if isinstance(settings.ALLOWED_ORIGINS, str) else settings.ALLOWED_ORIGINS,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

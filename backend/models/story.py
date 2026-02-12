@@ -1,5 +1,6 @@
 from sqlalchemy import Column, Integer, String, Boolean, JSON, DateTime, ForeignKey
 from sqlalchemy.orm import relationship
+from sqlalchemy.sql import func
 from db.database import Base
 
 class Story(Base):
@@ -8,7 +9,8 @@ class Story(Base):
     title = Column(String, index=True)
     session_id = Column(String, index=True)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
-    nodes = relationship(argument: "StoryNode", back_populates="story")
+    
+    nodes = relationship("StoryNode", back_populates="story")
 
 class StoryNode(Base):
     __tablename__ = "story_nodes"
@@ -19,4 +21,5 @@ class StoryNode(Base):
     is_ending=Column(Boolean, default=False)
     is_winning_ending=Column(Boolean, default=False)
     options = Column(JSON, default=list)
-    story = relationship(argument: "Story", back_populates="nodes")
+    
+    story = relationship("Story", back_populates="nodes")

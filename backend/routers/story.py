@@ -1,7 +1,7 @@
 import uuid
-from typing import Optional 
-from datetime import datetime 
-from fastapi import APIRouter, Depends, HTTPException, cookie, responese, backgroundtasks
+from typing import Optional, List, Dict
+from datetime import datetime
+from fastapi import APIRouter, Depends, HTTPException, Cookie, Response, BackgroundTasks
 from sqlalchemy.orm import Session
 
 from db.database import get_db, SessionLocal
@@ -17,20 +17,20 @@ router = APIRouter(
     tags=["stories"]
 )
 
-def get_session_id(session_id: Optional[str]= Cookie(default=None)):
+def get_session_id(session_id: Optional[str] = Cookie(default=None)):
     if not session_id:
         session_id = str(uuid.uuid4())
     return session_id
 
-@router.post(path:"/create", response_model=StoryJobResponse)
+@router.post("/create", response_model=StoryJobResponse)
 def create_story(
     request: CreateStoryRequest,
-    session_id: str = Depends(get_session_id),
-    db: Session = Depends(get_db),
     response: Response,
-    background_tasks: BackgroundTasks
+    background_tasks: BackgroundTasks,
+    session_id: str = Depends(get_session_id),
+    db: Session = Depends(get_db)
 ):
-    response.set_cookie(keys="session_id", value=session_id, httponly= True)
+    response.set_cookie(key="session_id", value=session_id, httponly=True)
 
     job_id = str(uuid.uuid4())
     job = StoryJob(
@@ -41,14 +41,13 @@ def create_story(
     )
     db.add(job)
     db.commit()
-    #db.refresh(job)
+    # db.refresh(job)
 
     background_tasks.add_task(
         generate_story_task,
         job_id, 
         request.theme, 
-        session_id,
-        db
+        session_id
     )
 
     return job
@@ -63,7 +62,7 @@ def generate_story_task(job_id: str, theme: str, session_id: str):
         try:
             job.status = "processing"
             db.commit()
-            story ={}
+            story = {}
 
             job.story_id = 1 # update
             job.status = "completed"
@@ -89,6 +88,7 @@ def get_complete_story(
     complete_story = build_complete_story_tree(db, story)
     return complete_story
 
-def build_complete_story_tree(db: Session, story: Story)-> CompleteStoryResponse:
-    
-    
+def build_complete_story_tree(db: Session, story: Story) -> CompleteStoryResponse:
+    # Placeholder implementation
+    # You need to implement the logic to traverse nodes and build the tree
+    raise HTTPException(status_code=501, detail="build_complete_story_tree not implemented yet")
