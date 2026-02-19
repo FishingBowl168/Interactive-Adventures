@@ -36,10 +36,10 @@ plot = sns.scatterplot(
     data=df, 
     x='Stage_Jittered', 
     y='Impact_Jittered', 
-    hue='Department', 
+    hue='Impact', 
     size='Impact',        
     sizes=(50, 700),      
-    palette='Set2',       
+    palette='YlOrRd',       
     alpha=0.8,
     edgecolor='black',    
     linewidth=0.5
@@ -54,7 +54,7 @@ plt.xlim(0, 4) # Adjust x-limits to fit 1, 2, 3 nicely (0.5 to 3.5 roughly)
 
 # Manually set the x-ticks to match the 1, 2, 3 mapping
 plt.xticks(ticks=[1, 2, 3], labels=['Planning', 'In progress', 'Completed'])
-plt.legend(bbox_to_anchor=(1.05, 1), loc='upper left', title='Department')
+plt.legend(bbox_to_anchor=(1.05, 1), loc='upper left', title='Impact')
 
 # Softening the grid lines to match your image
 plt.grid(axis='y', linestyle='--', alpha=0.6)
