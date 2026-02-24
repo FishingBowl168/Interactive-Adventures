@@ -7,13 +7,7 @@ import numpy as np
 np.random.seed(42)
 n_projects = 80
 
-data = {
-    'Stage': np.random.choice(['Planning', 'In progress', 'Completed'], n_projects),
-    'Impact': np.random.choice([1, 2, 3, 4, 5], n_projects), # Impact range 1 to 5
-    'Department': np.random.choice(['Tech', 'Marketing', 'Sales', 'Ops'], n_projects)
-}
-
-df = pd.DataFrame(data)
+df = pd.read_excel("Output.xlsx")
 
 # 2. Set the aesthetic style
 sns.set_theme(style="whitegrid", rc={"axes.facecolor": "#f0f0f0"})
@@ -23,21 +17,21 @@ plt.figure(figsize=(12, 7))
 # swarmplot doesn't support 'size' mapping efficiently, so we use scatterplot with manual jitter.
 # User requested range: 0.7 to 1.3 for 1, 1.7 to 2.3 for 2. -> Center at 1, 2, 3 with +/- 0.3 jitter.
 
-stage_mapping = {'Planning': 1, 'In progress': 2, 'Completed': 3}
-df['Stage_Num'] = df['Stage'].map(stage_mapping)
+stage_mapping = {"Planned": 1, "Ongoing": 2, "Completed": 3}
+df['Stage_Num'] = df['status'].map(stage_mapping)
 
 # Add jitter to x-axis (Stage)
 df['Stage_Jittered'] = df['Stage_Num'] + np.random.uniform(-0.3, 0.3, len(df))
 
 # Range 0.7 to 1.3 means 1.0 +/- 0.3
-df['Impact_Jittered'] = df['Impact'] + np.random.uniform(-0.3, 0.3, len(df))
+df['Impact_Jittered'] = df['impact'] + np.random.uniform(-0.3, 0.3, len(df))
 
 plot = sns.scatterplot(
     data=df, 
     x='Stage_Jittered', 
     y='Impact_Jittered', 
-    hue='Impact', 
-    size='Impact',        
+    hue='impact', 
+    size='impact',        
     sizes=(50, 700),      
     palette='YlOrRd',       
     alpha=0.8,
@@ -49,7 +43,7 @@ plot = sns.scatterplot(
 plt.title('Project Portfolio: Impact (Size), Dept (Color), and Stage (Axis)', fontsize=14)
 plt.xlabel('') 
 plt.ylabel('Impact Scale (1-5)')
-plt.ylim(0, 6)
+plt.ylim(0, 4)
 plt.xlim(0, 4) # Adjust x-limits to fit 1, 2, 3 nicely (0.5 to 3.5 roughly)
 
 # Manually set the x-ticks to match the 1, 2, 3 mapping
