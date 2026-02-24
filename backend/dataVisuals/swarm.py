@@ -3,9 +3,6 @@ import seaborn as sns
 import pandas as pd
 import numpy as np
 
-# 1. Create dummy data
-np.random.seed(42)
-n_projects = 80
 
 df = pd.read_excel("Output.xlsx")
 
@@ -21,10 +18,10 @@ stage_mapping = {"Planned": 1, "Ongoing": 2, "Completed": 3}
 df['Stage_Num'] = df['status'].map(stage_mapping)
 
 # Add jitter to x-axis (Stage)
-df['Stage_Jittered'] = df['Stage_Num'] + np.random.uniform(-0.3, 0.3, len(df))
+df['Stage_Jittered'] = df['Stage_Num'] + np.random.uniform(-0.35, 0.35, len(df))
 
 # Range 0.7 to 1.3 means 1.0 +/- 0.3
-df['Impact_Jittered'] = df['impact'] + np.random.uniform(-0.3, 0.3, len(df))
+df['Impact_Jittered'] = np.random.uniform(0.5, 6.5, len(df))
 
 plot = sns.scatterplot(
     data=df, 
@@ -32,7 +29,7 @@ plot = sns.scatterplot(
     y='Impact_Jittered', 
     hue='impact', 
     size='impact',        
-    sizes=(50, 700),      
+    sizes=(50, 1000),      
     palette='YlOrRd',       
     alpha=0.8,
     edgecolor='black',    
@@ -42,15 +39,15 @@ plot = sns.scatterplot(
 # 4. Customizing labels and grid
 plt.title('Project Portfolio: Impact (Size), Dept (Color), and Stage (Axis)', fontsize=14)
 plt.xlabel('') 
-plt.ylabel('Impact Scale (1-5)')
-plt.ylim(0, 4)
-plt.xlim(0, 4) # Adjust x-limits to fit 1, 2, 3 nicely (0.5 to 3.5 roughly)
+plt.ylabel('Impact Scale (1-3)')
+plt.ylim(0, 7)
+plt.xlim(0, 4) 
 
 # Manually set the x-ticks to match the 1, 2, 3 mapping
 plt.xticks(ticks=[1, 2, 3], labels=['Planning', 'In progress', 'Completed'])
 plt.legend(bbox_to_anchor=(1.05, 1), loc='upper left', title='Impact')
 
-# Softening the grid lines to match your image
+# Softening the grid lines 
 plt.grid(axis='y', linestyle='--', alpha=0.6)
 sns.despine(left=True, bottom=True)
 
