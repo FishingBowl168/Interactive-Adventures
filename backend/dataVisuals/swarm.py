@@ -16,18 +16,19 @@ df['Stage_Num'] = df['status'].map(stage_mapping)
 
 final_x = []
 final_y = []
-final_impacts = []
+final_impacts = [] # Store impact of placed points for collision checking
 
-# Map impact level to a physical distance threshold (0.25 to 0.65)
-threshold_map = {3: 1, 2: 0.4, 1: 0.2}
+# Define thresholds for each impact level in coordinate space
+# (e.g., impact 3 needs ~0.65 space, impact 1 needs ~0.25)
+impact_thresholds = {1: 0.25, 2: 0.45, 3: 0.65}
 
 for i, row in df.iterrows():
     placed = False
     attempts = 0
     stage_center = row['Stage_Num']
-    curr_impact = row['impact']
+    current_impact = row['impact']
     
-    while not placed and attempts < 250:
+    while not placed and attempts < 200:
         candidate_x = stage_center + np.random.uniform(-0.35, 0.35)
         candidate_y = np.random.uniform(0.5, 6.5)
         
@@ -35,25 +36,25 @@ for i, row in df.iterrows():
         for px, py, pi in zip(final_x, final_y, final_impacts):
             dist = np.sqrt((candidate_x - px)**2 + (candidate_y - py)**2)
             
-            # Use the larger impact to determine minimum allowed space
-            required_dist = max(threshold_map[curr_impact], threshold_map[pi])
+            # Use the larger threshold of the two points involved
+            dynamic_threshold = max(impact_thresholds[pi], impact_thresholds[current_impact])
             
-            if dist < required_dist:
+            if dist < dynamic_threshold:
                 is_collision = True
                 break
         
         if not is_collision:
             final_x.append(candidate_x)
             final_y.append(candidate_y)
-            final_impacts.append(curr_impact)
+            final_impacts.append(current_impact)
             placed = True
         
         attempts += 1
     
-    if not placed:
+    if not placed: # Fallback
         final_x.append(candidate_x)
         final_y.append(candidate_y)
-        final_impacts.append(curr_impact)
+        final_impacts.append(current_impact)
 
 df['packed_x'] = final_x
 df['packed_y'] = final_y
@@ -64,7 +65,7 @@ plot = sns.scatterplot(
     y='packed_y', 
     hue='impact', 
     size='impact',        
-    sizes=(50, 1250),      
+    sizes=(50, 1500),      
     palette='YlOrRd',       
     alpha=0.8,
     edgecolor='black',    
