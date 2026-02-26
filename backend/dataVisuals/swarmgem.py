@@ -12,10 +12,10 @@ df = pd.read_excel("Output-V4.xlsx")
 print(df.count())
 
 impact_palette = [
-    "#ffb338",
-    "#96d13d", 
-    "#2ab2bc",   
-    "#e64b43"
+    "O",
+    "g", 
+    "b",   
+    "r"
 ]
 
 # 1. Set the aesthetic style - 'white' removes the default grid background
