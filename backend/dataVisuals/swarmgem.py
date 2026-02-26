@@ -73,9 +73,6 @@ for cfg in label_configs:
 plt.xlim(0, 8)
 plt.ylim(-5, 4) # Expanded bottom limit to make room for boxes
 
-# Remove standard axes and ticks for that "infographic" feel
-ax.set_xticks([]) # Remove default x-ticks
-ax.set_yticks([])
 sns.despine(left=True, bottom=True)
 
 # --- ADD IN-GRAPH Y-AXIS LABELS ---
@@ -86,7 +83,7 @@ ax.text(0.1, 3.5, "Promising", fontsize=fnt_size, fontweight='bold',
 ax.text(0.1, -3.25, "KIV", fontsize=fnt_size, fontweight='bold', 
         color='#6a6a6a', va='top', ha='left', alpha=0.6)
 
-# Add soft vertical separators (as seen in your reference)
+# Add soft vertical separators
 for x_sep in [2, 4, 6]:
     plt.axvline(x=x_sep, color='#e0e0e0', linestyle='-', linewidth=1.5, zorder=1)
 
