@@ -5,16 +5,19 @@ import pandas as pd
 import random
 
 # Load data (using dummy data for demonstration)
-df = pd.read_excel("Output-V3.xlsx")
+df = pd.read_excel("Output-V4.xlsx")
 # data = {'stage_numeric': [1, 2, 3, 4] * 10, 'promising': [random.uniform(-1, 1) for _ in range(40)], 'impact': [1, 2, 3] * 13 + [1]}
 # df = pd.DataFrame(data)
 
-impact_palette = [  
+print(df.count())
+
+impact_palette = [
     "#ffb338",
     "#96d13d", 
     "#2ab2bc",   
     "#e64b43"
 ]
+
 # 1. Set the aesthetic style - 'white' removes the default grid background
 sns.set_theme(style="white")
 fig, ax = plt.subplots(figsize=(14, 8))
@@ -39,7 +42,7 @@ for i, row in df.iterrows():
 plot = sns.scatterplot(
     x=final_x, y=final_y, hue=final_colors, size=final_impacts,
     sizes=[1 * size_ratio, 2.5 * size_ratio, 4 * size_ratio],
-    palette=None, alpha=0.9, ax=ax,
+    palette={c: c for c in impact_palette}, alpha=1, ax=ax, 
     legend=False
 )
 
@@ -47,7 +50,7 @@ plot = sns.scatterplot(
 # Define positions and colors matching your reference image
 label_configs = [
     {"label": "Ideation", "color": "#ffb338", "x_start": 0.1},
-    {"label": "POC","color": "#96d13d", "x_start": 2.1},
+    {"label": "POC/prototyping","color": "#96d13d", "x_start": 2.1},
     {"label": "Pilot", "color": "#2ab2bc", "x_start": 4.1},
     {"label": "Operationalized", "color": "#e64b43", "x_start": 6.1},
 ]
@@ -80,7 +83,7 @@ sns.despine(left=True, bottom=True)
 ax.text(0.1, 3.5, "Promising", fontsize=fnt_size, fontweight='bold', 
         color='#6a6a6a', va='bottom', ha='left', alpha=0.6)
 
-ax.text(0.1, -3.25, "Not Promising", fontsize=fnt_size, fontweight='bold', 
+ax.text(0.1, -3.25, "KIV", fontsize=fnt_size, fontweight='bold', 
         color='#6a6a6a', va='top', ha='left', alpha=0.6)
 
 # Add soft vertical separators (as seen in your reference)
